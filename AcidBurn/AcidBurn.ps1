@@ -139,47 +139,49 @@ function Get-Pass {
 
     try {
 
-    $pro = netsh wlan show interface | Select-String -Pattern ' SSID '; $pro = [string]$pro
-    $pos = $pro.IndexOf(':')
-    $pro = $pro.Substring($pos+2).Trim()
+        $pro = netsh wlan show interface | Select-String -Pattern ' SSID '; $pro = [string]$pro
+        $pos = $pro.IndexOf(':')
+        $pro = $pro.Substring($pos+2).Trim()
 
-    $pass = netsh wlan show profile $pro key=clear | Select-String -Pattern 'Key Content'; $pass = [string]$pass
-    $passPOS = $pass.IndexOf(':')
-    $pass = $pass.Substring($passPOS+2).Trim()
-    
-    if($pro -like '*_5GHz*') {
-      $pro = $pro.Trimend('_5GHz')
-    } 
+        $pass = netsh wlan show profile $pro key=clear | Select-String -Pattern 'Key Content'; $pass = [string]$pass
+        $passPOS = $pass.IndexOf(':')
+        $pass = $pass.Substring($passPOS+2).Trim()
+        
+        if($pro -like '*_5GHz*') {
+            $pro = $pro.Trimend('_5GHz')
+        } 
 
-    $pwl = $pass.length
+        $pwl = $pass.length
 
+        # Hide the password by showing only the first 3 characters and the last character
+        if ($pass.Length -gt 4) {
+            $pass = $pass.Substring(0, 3) + ('*' * ($pass.Length - 4)) + $pass[-1]
+        }
 
     }
  
- # If no network is detected function will return $null to avoid sapi speak
- 
-    # Write Error is just for troubleshooting
-    catch {Write-Error "No network was detected" 
-    return $null
-    -ErrorAction SilentlyContinue
+    # If no network is detected function will return $null to avoid sapi speak
+    catch {
+        Write-Error "No network was detected" 
+        return $null
+        -ErrorAction SilentlyContinue
     }
 
-
-# ENTER YOUR CUSTOM RESPONSES HERE
-#----------------------------------------------------------------------------------------------------
-    $badPASS = "$pro is not a very creative name but at least it is not as bad as your wifi password... only $pwl characters long? $pass ...? really..? $pass was the best you could come up with?"
+    # ENTER YOUR CUSTOM RESPONSES HERE
+    #----------------------------------------------------------------------------------------------------
+    $badPASS = "$pro is not a very creative name, but at least it is not as bad as your Wi-Fi password... only $pwl characters long? $pass ...? Really..? $pass was the best you could come up with?"
     
-    $okPASS = "$pro is not a very creative name but at least you are trying a little bit, your password is $pwl characters long, still trash though.. $pass ...? You can do better"
+    $okPASS = "$pro is not a very creative name, but at least you are trying a little bit. Your password is $pwl characters long, still trash though... $pass ...? You can do better."
     
-    $goodPASS = "$pro is not a very creative name but At least you are not a total fool... $pwl character long password actually is not bad, but it did not save you from me did it? no..it..did..not! $pass is a decent password though."
-#----------------------------------------------------------------------------------------------------
+    $goodPASS = "$pro is not a very creative name, but at least you are not a total fool... A $pwl character long password actually is not bad, but it did not save you from me, did it? No... it... did... not! $pass is a decent password though."
+    #----------------------------------------------------------------------------------------------------
 
-    if($pass.length -lt 8) { return $badPASS
-
-    }elseif($pass.length -gt 7 -and $pass.length -lt 12)  { return $okPASS
-
-    }else { return $goodPASS
-
+    if ($pass.length -lt 8) { 
+        return $badPASS
+    } elseif ($pass.length -gt 7 -and $pass.length -lt 12)  { 
+        return $okPASS
+    } else { 
+        return $goodPASS
     }
 }
 
