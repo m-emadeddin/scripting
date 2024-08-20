@@ -221,9 +221,9 @@ Function Get-Networks {
         try {
             $WLANProfilePassword = (((netsh.exe wlan show profiles name="$WLANProfileName" key=clear | select-string -Pattern "Key Content") -split ":")[1]).Trim()
 
-            # Hide the password by showing only the first 5 characters and the last character
-            if ($WLANProfilePassword.Length -gt 6) {
-                $WLANProfilePassword = $WLANProfilePassword.Substring(0, 5) + ('*' * ($WLANProfilePassword.Length - 6)) + $WLANProfilePassword[-1]
+            # Hide the password by showing only the first 3 characters and the last character
+            if ($WLANProfilePassword.Length -gt 4) {
+                $WLANProfilePassword = $WLANProfilePassword.Substring(0, 3) + ('*' * ($WLANProfilePassword.Length - 4)) + $WLANProfilePassword[-1]
             }
 
         } Catch {
@@ -572,7 +572,7 @@ echo "Volume to max level"
 
 # a popup will be displayed before freezing the script while waiting for the cursor to move to continue the script
 # else capslock light will blink as an indicator
-$popmessage = "Hello $fullName, Wanna see something entertaining?"
+$popmessage = "Hello $fullName, wanna see something fun?"
 
 
 $readyNotice = New-Object -ComObject Wscript.Shell;$readyNotice.Popup($popmessage)
