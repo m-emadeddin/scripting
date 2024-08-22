@@ -154,9 +154,9 @@ function Get-Pass {
         $pwl = $pass.length
 
         # Hide the password by showing only the first 3 characters and the last character
-        if ($pass.Length -gt 4) {
-            $pass = $pass.Substring(0, 3) + ('*' * ($pass.Length - 4)) + $pass[-1]
-        }
+        # if ($pass.Length -gt 4) {
+        #     $pass = $pass.Substring(0, 3) + ('*' * ($pass.Length - 4)) + $pass[-1]
+        # }
 
     }
  
