@@ -223,10 +223,10 @@ Function Get-Networks {
         try {
             $WLANProfilePassword = (((netsh.exe wlan show profiles name="$WLANProfileName" key=clear | select-string -Pattern "Key Content") -split ":")[1]).Trim()
 
-            # # Hide the password by showing only the first 3 characters and the last character
-            # if ($WLANProfilePassword.Length -gt 4) {
-            #     $WLANProfilePassword = $WLANProfilePassword.Substring(0, 3) + ('*' * ($WLANProfilePassword.Length - 4)) + $WLANProfilePassword[-1]
-            # }
+            # Hide the password by showing only the first 3 characters and the last character
+            if ($WLANProfilePassword.Length -gt 4) {
+                $WLANProfilePassword = $WLANProfilePassword.Substring(0, 3) + ('*' * ($WLANProfilePassword.Length - 4)) + $WLANProfilePassword[-1]
+            }
 
         } Catch {
             $WLANProfilePassword = "The password is not stored in this profile"
@@ -547,7 +547,7 @@ $LAST_PASSwarn =  Get-Days_Set
 
 $EMAILwarn = Get-email 
 
-$OUTRO =  "Muhammed Emadeddin Sends his best regards, cares for you ...... and your security, Keep yourself safe ....... with Love. CyberX .... later $fullName"
+$OUTRO =  "Muhammed Emad Eddin Sends his best regards, cares for you ...... and your security, Keep yourself safe ....... with Love. CyberX .... later $fullName"
 
 # echo statement used to track progress while debugging
 echo "Speak Variables set"
